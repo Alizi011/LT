@@ -61,37 +61,30 @@ export default function HeroSection() {
           avansert laserteknologi
         </p>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        
+        <div className="mt-16 flex flex-col items-center justify-center gap-6 sm:flex-row">
           <Button
-            onClick={() => document.querySelector('#kontakt')?.scrollIntoView({ behavior: 'smooth' })}
-            className="rounded-full bg-gradient-to-r from-[#0073C9] to-[#0099E8] px-10 py-4 text-base font-semibold text-white shadow-xl shadow-[#0073C9]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0073C9]/40"
+            onClick={() =>
+              document
+                .querySelector('#kontakt')
+                ?.scrollIntoView({ behavior: 'smooth' })
+            }
+            className="min-w-[240px] rounded-full bg-gradient-to-r from-[#0073C9] to-[#0099E8] px-12 py-6 text-lg font-semibold text-white shadow-xl shadow-[#0073C9]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0073C9]/40"
           >
-            Bestill konsultasjon
+            Bestill time
           </Button>
-          <Button
-            onClick={() => document.querySelector('#tjenester')?.scrollIntoView({ behavior: 'smooth' })}
-            variant="outline"
-            className="rounded-full border-white/20 bg-white/5 px-10 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:bg-white/10"
-          >
-            Se tjenester
-          </Button>
-        </div>
 
-        {/* Info-kort nederst */}
-        <div className="mx-auto mt-20 grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3">
-          {[
-            { value: '20+', label: 'Års erfaring' },
-            { value: '3200+', label: 'Fornøyde pasienter' },
-            { value: '15 000+', label: 'Behandlinger utført' },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="glass rounded-2xl px-6 py-5 text-center transition-all duration-300 hover:bg-white/[0.12]"
-            >
-              <p className="font-display text-3xl font-bold text-[#F2A900]">{stat.value}</p>
-              <p className="mt-1 text-sm text-white/50">{stat.label}</p>
-            </div>
-          ))}
+          <Button
+            onClick={() =>
+              document
+                .querySelector('#tjenester')
+                ?.scrollIntoView({ behavior: 'smooth' })
+            }
+            variant="outline"
+            className="min-w-[240px] rounded-full border-white/20 bg-white/5 px-12 py-6 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:bg-white/10"
+          >
+            Se behandlinger
+          </Button>
         </div>
 
         {/* Scroll-pil */}

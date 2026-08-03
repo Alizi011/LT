@@ -35,7 +35,7 @@ export default function Navigation() {
           : 'bg-transparent'
       }`}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-32 max-w-7xl items-center justify-between px-8 sm:px-10 lg:px-12">
         {/* Logo */}
         <a
           href="#hjem"
@@ -45,7 +45,7 @@ export default function Navigation() {
           <img
             src="/logo.png"
             alt="Lørenskog Tannlegesenter"
-            className="h-[68px] w-auto"
+            className="h-[180px] w-auto"
           />
         </a>
 

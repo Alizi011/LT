@@ -9,6 +9,7 @@ import CookieBanner from '@/components/CookieBanner'
 import HeroSection from '@/sections/HeroSection'
 import ServicesSection from '@/sections/ServicesSection'
 import LaserSection from '@/sections/LaserSection'
+import ReviewsSection from '@/components/ReviewsSection'
 import StepsSection from '@/sections/StepsSection'
 import TechnologySection from '@/sections/TechnologySection'
 import AboutSection from '@/sections/AboutSection'
@@ -33,6 +34,7 @@ export default function App() {
         <HeroSection />
         <ServicesSection />
         <LaserSection />
+        <ReviewsSection />
         <StepsSection />
         <TechnologySection />
         <AboutSection />

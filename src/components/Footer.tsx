@@ -18,8 +18,8 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Logo */}
           <div>
-            <img src="/logo.png" alt="Lørenskog Tannlegesenter" className="h-[72px] w-auto" />
-            <p className="mt-4 text-sm leading-relaxed text-white/30">
+            <img src="/logo.png" alt="Lørenskog Tannlegesenter" className="h-[180px] w-auto" />
+            <p className="mt-4 text-sm leading-relaxed text-white/90">
               Moderne tannklinikk i Lørenskog med avansert laserteknologi og fokus på din livskvalitet.
             </p>
           </div>

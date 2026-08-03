@@ -53,19 +53,19 @@ export default function AboutSection() {
             <div className="relative">
               <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-black/30">
                 <img
-                  src="/clinic-interior.jpg"
+                  src="/ltann.jpg"
                   alt="Klinikk interiør"
                   className="w-full object-cover transition-transform duration-700 hover:scale-105"
                 />
               </div>
               {/* Flytende stat-kort */}
               <div className="absolute -left-6 bottom-12 rounded-2xl bg-white p-6 shadow-xl">
-                <p className="font-display text-4xl font-bold text-[#0073C9]">20+</p>
-                <p className="text-sm text-[#5A6B78]">år i drift</p>
+                <p className="font-display text-4xl font-bold text-[#0073C9]">Fotona®</p>
+                <p className="text-sm text-[#5A6B78]">Laserteknologi</p>
               </div>
               <div className="absolute -right-4 top-8 rounded-2xl bg-gradient-to-br from-[#0073C9] to-[#0099E8] p-5 shadow-lg shadow-[#0073C9]/30">
-                <p className="text-lg font-bold text-white">Åpent i dag</p>
-                <p className="text-sm text-white/70">08:00 — 16:00</p>
+                <p className="text-lg font-bold text-white">Trygg behandling</p>
+                <p className="text-sm text-white/70">Personlig oppfølging - Fra første konsultasjon</p>
               </div>
             </div>
           </ScrollReveal>

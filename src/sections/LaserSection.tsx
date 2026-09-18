@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import {
+  Activity,
   ArrowRight,
   Check,
+  CircleHelp,
   Droplets,
   HeartPulse,
   MoonStar,
   ShieldCheck,
+  SmilePlus,
   Sparkles,
+  Stethoscope,
+  Waves,
   X,
 } from 'lucide-react'
 
@@ -19,7 +24,14 @@ type LaserTreatment = {
   title: string
   description: string
   details: string
+  idealFor: string[]
   benefits: string[]
+}
+
+type TechnologyFeature = {
+  icon: LucideIcon
+  title: string
+  description: string
 }
 
 const laserTreatments: LaserTreatment[] = [
@@ -28,29 +40,79 @@ const laserTreatments: LaserTreatment[] = [
     eyebrow: 'NightLase®',
     title: 'Laserbehandling mot snorking',
     description:
-      'Skånsom behandling av vevet i munnhulen og svelget for å redusere snorking.',
+      'En ikke-invasiv behandling som kan bidra til å redusere snorking og støtte bedre søvnkvalitet.',
     details:
-      'NightLase® bruker kontrollert laserenergi for å stimulere og stramme opp vevet bakerst i munnen. Behandlingen gjennomføres uten kirurgiske inngrep og krever normalt ingen nedetid.',
+      'NightLase® bruker skånsom laserenergi for å varme opp og stimulere vevet bakerst i munnhulen. Målet er å bidra til økt spenst i vevet og redusert vibrasjon under søvn. Behandlingen utføres uten kirurgiske inngrep og uten klassisk nedetid.',
+    idealFor: [
+      'Plagsom snorking',
+      'Pasienter som ønsker et ikke-kirurgisk alternativ',
+      'Pasienter som ønsker en skånsom behandlingsform',
+    ],
     benefits: [
       'Ikke-kirurgisk behandling',
       'Kort behandlingstid',
-      'Ingen sykmelding eller nedetid',
-      'Individuelt behandlingsforløp',
+      'Ingen klassisk nedetid',
+      'Tilpasses individuelt behandlingsforløp',
+    ],
+  },
+  {
+    icon: Sparkles,
+    eyebrow: 'TouchWhite®',
+    title: 'Laserassistert tannbleking',
+    description:
+      'Skånsom og effektiv bleking der laser brukes til å aktivere blekegelen målrettet.',
+    details:
+      'TouchWhite® er en laserassistert blekemetode hvor energien primært virker i blekegelen. Det gjør det mulig å arbeide mer målrettet og med mindre unødvendig varmebelastning på tannen sammenlignet med enkelte andre metoder. Behandlingen vurderes alltid ut fra tannstatus og ønsket resultat.',
+    idealFor: [
+      'Misfargede tenner',
+      'Pasienter som ønsker raskere blekeresultat',
+      'Pasienter som ønsker profesjonell bleking i klinikk',
+    ],
+    benefits: [
+      'Målrettet aktivering av blekegelen',
+      'Skånsom tilnærming',
+      'Klinikkbasert og kontrollert behandling',
+      'Vurderes individuelt etter tannstatus',
     ],
   },
   {
     icon: Droplets,
-    eyebrow: 'Fotona®',
-    title: 'Behandling av tørr munn',
+    eyebrow: 'ComfortLase®',
+    title: 'Smertelindring og støtte til tilheling',
     description:
-      'Laserstimulering som kan bidra til økt spyttproduksjon og mindre ubehag.',
+      'Fotobiomodulasjon kan brukes ved smerter, sårtilheling og irritert vev i munnhulen.',
     details:
-      'Laserbehandlingen stimulerer spyttkjertlene og vevet i munnhulen. Målet er å redusere tørrhetsfølelse og gjøre det mer behagelig å spise, snakke og svelge.',
+      'ComfortLase® og fotobiomodulasjon benytter lavenergi-laser for å stimulere vev på en skånsom måte. Dette kan brukes som støtte ved smerter, ømhet, munnsår og tilhelingsfaser etter ulike behandlinger.',
+    idealFor: [
+      'Ømt eller irritert vev',
+      'Sårtilheling',
+      'Utvalgte smerte- og irritasjonstilstander i munnhulen',
+    ],
     benefits: [
-      'Skånsom stimulering',
-      'Ingen kirurgiske inngrep',
+      'Skånsom behandling',
+      'Kan støtte tilheling',
+      'Kan bidra til mindre ubehag',
       'Kort behandlingstid',
-      'Tilpasses årsak og symptomer',
+    ],
+  },
+  {
+    icon: HeartPulse,
+    eyebrow: 'Fotona®',
+    title: 'Munnsår, herpes og irritert slimhinne',
+    description:
+      'Målrettet laserbehandling som kan lindre ubehag og støtte raskere tilheling.',
+    details:
+      'Laser kan brukes ved enkelte typer munnsår, herpesutbrudd og irriterte slimhinner. Behandlingen retter seg mot det aktuelle området og kan bidra til redusert ubehag og en mer komfortabel tilhelingsprosess.',
+    idealFor: [
+      'Herpesutbrudd',
+      'Afte / munnsår',
+      'Irritert slimhinne',
+    ],
+    benefits: [
+      'Rask og målrettet behandling',
+      'Kan redusere smerter og ubehag',
+      'Ingen kirurgiske inngrep',
+      'Kan støtte raskere tilheling',
     ],
   },
   {
@@ -58,29 +120,79 @@ const laserTreatments: LaserTreatment[] = [
     eyebrow: 'Periodontal laser',
     title: 'Tannkjøttbehandling',
     description:
-      'Presis laserbehandling ved betennelse og bakterier rundt tenner og tannkjøtt.',
+      'Presis behandling ved betennelse, bakterier og sykt vev rundt tenner og tannkjøtt.',
     details:
-      'Laser kan brukes sammen med tradisjonell tannrens for å behandle infisert og betent vev. Teknologien gjør det mulig å arbeide presist i områder som kan være vanskelig tilgjengelige.',
+      'Laser kan brukes som et supplement til tradisjonell periodontal behandling. Teknologien gjør det mulig å arbeide målrettet i periodontalområdet og kan bidra til redusert bakteriebelastning, skånsom behandling av vev og god kontroll i vanskelig tilgjengelige områder.',
+    idealFor: [
+      'Tannkjøttbetennelse',
+      'Periodontale lommer',
+      'Vedlikehold og støttebehandling',
+    ],
     benefits: [
       'Presis behandling',
       'Skånsom mot omkringliggende vev',
-      'Reduserer bakterier i behandlingsområdet',
+      'Kan redusere bakterier i området',
       'Kan støtte en god tilhelingsprosess',
     ],
   },
   {
-    icon: HeartPulse,
-    eyebrow: 'Fotona®',
-    title: 'Munnsår og herpes',
+    icon: Activity,
+    eyebrow: 'Peri-implantitt',
+    title: 'Laserbehandling rundt implantater',
     description:
-      'Målrettet behandling som kan lindre ubehag og støtte tilhelingen.',
+      'Skånsom og målrettet behandling ved betennelse og irritasjon rundt implantater.',
     details:
-      'Laser kan brukes ved enkelte former for munnsår, herpesutbrudd og irritert slimhinne. Behandlingen retter seg direkte mot det aktuelle området og tar vanligvis kort tid.',
+      'Ved peri-implantitt og betennelsestilstander rundt implantater kan laser brukes som en del av behandlingen for å arbeide skånsomt i området. Målet er å redusere bakteriebelastning, behandle betent vev og støtte tilheling rundt implantatet.',
+    idealFor: [
+      'Betennelse rundt implantater',
+      'Rødhet, irritasjon eller blødning ved implantat',
+      'Behov for målrettet oppfølging rundt implantat',
+    ],
     benefits: [
-      'Rask og målrettet behandling',
-      'Ingen kirurgiske inngrep',
-      'Kan redusere smerter og ubehag',
-      'Kan støtte raskere tilheling',
+      'Målrettet behandling rundt implantatet',
+      'Skånsom mot omkringliggende vev',
+      'Kan støtte en mer kontrollert tilhelingsprosess',
+      'Individuell vurdering av behandlingsopplegg',
+    ],
+  },
+  {
+    icon: Waves,
+    eyebrow: 'SWEEPS® / TwinLight®',
+    title: 'Rotbehandling og desinfeksjon',
+    description:
+      'Avansert laserteknologi som kan brukes for mer målrettet rensing og desinfeksjon i rotkanalsystemet.',
+    details:
+      'Fotona-teknologier som SWEEPS® og TwinLight® er utviklet for å støtte mer effektiv irrigasjon og desinfeksjon i komplekse rotkanaler. Laser brukes som et supplement i behandlingen der målet er å arbeide mer presist og oppnå bedre tilgang i anatomisk krevende områder.',
+    idealFor: [
+      'Rotbehandling',
+      'Komplekse rotkanalsystemer',
+      'Behov for målrettet desinfeksjon',
+    ],
+    benefits: [
+      'Kan forbedre rengjøring i komplekse kanaler',
+      'Presis og målrettet behandling',
+      'Kan brukes som supplement til tradisjonell rotbehandling',
+      'Moderne teknologi for avanserte kasus',
+    ],
+  },
+  {
+    icon: SmilePlus,
+    eyebrow: 'Fotona®',
+    title: 'Tannfølsomhet',
+    description:
+      'Skånsom behandling som kan bidra til lindring ved sensitive tenner.',
+    details:
+      'Laser kan brukes ved tannfølsomhet som et målrettet tiltak for pasienter som opplever ising eller ubehag ved kulde, varme eller berøring. Egnethet vurderes individuelt ut fra årsak til sensitiviteten.',
+    idealFor: [
+      'Sensitive tenner',
+      'Ising ved kaldt eller varmt',
+      'Ubehag ved berøring av tannoverflaten',
+    ],
+    benefits: [
+      'Rask og skånsom behandling',
+      'Kan bidra til mindre ising og ubehag',
+      'Kort behandlingstid',
+      'Individuell vurdering av årsak og behov',
     ],
   },
 ]
@@ -90,6 +202,44 @@ const laserAdvantages = [
   'Skånsom behandling',
   'Kort behandlingstid',
   'Moderne Fotona®-teknologi',
+]
+
+const technologyFeatures: TechnologyFeature[] = [
+  {
+    icon: ShieldCheck,
+    title: 'Presisjon i behandling',
+    description:
+      'Laser gjør det mulig å arbeide svært målrettet i både hardt og bløtt vev, med god kontroll i små behandlingsområder.',
+  },
+  {
+    icon: Droplets,
+    title: 'Skånsom mot vevet',
+    description:
+      'Ved mange behandlinger kan laser bidra til mindre belastning på omkringliggende vev og en mer kontrollert behandlingsopplevelse.',
+  },
+  {
+    icon: Activity,
+    title: 'Komfort og tilheling',
+    description:
+      'Teknologien kan i mange tilfeller bidra til mindre ubehag, mindre blødning og en god tilhelingsprosess.',
+  },
+  {
+    icon: Waves,
+    title: 'Avansert Fotona-plattform',
+    description:
+      'LightWalker®, SkyPulse®, NightLase®, SWEEPS® og TouchWhite® gir flere behandlingsmuligheter på samme teknologi-plattform.',
+  },
+]
+
+const treatmentGroups = [
+  'Snorking og søvnrelaterte plager',
+  'Tannbleking',
+  'Tannkjøttbehandling',
+  'Peri-implantitt',
+  'Rotbehandling / endodonti',
+  'Tannfølsomhet',
+  'Herpes, after og irritert slimhinne',
+  'Smertelindring og støtte til tilheling',
 ]
 
 export default function LaserSection() {
@@ -134,9 +284,7 @@ export default function LaserSection() {
       >
         {/* Bakgrunn */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0073C9]/20 via-transparent to-[#F2A900]/10" />
-
         <div className="pointer-events-none absolute -left-40 top-20 h-[420px] w-[420px] rounded-full bg-[#0073C9]/20 blur-[150px]" />
-
         <div className="pointer-events-none absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-[#F2A900]/10 blur-[150px]" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -149,16 +297,17 @@ export default function LaserSection() {
               </span>
 
               <h2 className="mt-7 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-7xl">
-                Neste generasjon
+                Presis, skånsom og
                 <span className="block bg-gradient-to-r from-[#33B5F5] to-[#F2A900] bg-clip-text text-transparent">
-                  tannbehandling
+                  moderne laserbehandling
                 </span>
               </h2>
 
-              <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-white/55">
-                Moderne laserteknologi gir oss mulighet til å utføre flere
-                behandlinger med høy presisjon, god komfort og minimal
-                belastning på vevet.
+              <p className="mx-auto mt-7 max-w-3xl text-lg leading-relaxed text-white/60">
+                Med Fotona®-teknologi kan vi tilby flere behandlinger med høy
+                presisjon og god komfort. Laser kan i mange tilfeller være et
+                skånsomt supplement eller alternativ ved utvalgte behandlinger
+                innen tannhelse.
               </p>
 
               <div className="mt-9 flex flex-wrap justify-center gap-3">
@@ -175,32 +324,46 @@ export default function LaserSection() {
             </div>
           </ScrollReveal>
 
-          {/* Stort bilde */}
+          {/* Hero / hovedblokk */}
           <ScrollReveal y={45} delay={0.1}>
             <div className="relative mx-auto mt-16 max-w-6xl">
-              <div className="relative min-h-[430px] overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black/40 sm:min-h-[560px]">
+              <div className="relative min-h-[460px] overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black/40 sm:min-h-[600px]">
                 <img
                   src="/laser-dentistry.jpg"
                   alt="Fotona laserbehandling ved Lørenskog Tannlegesenter"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-r from-[#07101F]/85 via-[#07101F]/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#07101F]/92 via-[#07101F]/58 to-[#07101F]/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07101F] via-[#07101F]/10 to-transparent" />
 
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#07101F] via-[#07101F]/40 to-transparent p-7 pt-32 sm:p-12 sm:pt-40">
-                  <div className="max-w-xl">
+                <div className="absolute inset-x-0 bottom-0 p-7 pt-32 sm:p-12 sm:pt-40">
+                  <div className="max-w-2xl">
                     <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#F2A900]">
-                      Avansert teknologi
+                      LightWalker® • SkyPulse® • SWEEPS®
                     </p>
 
                     <h3 className="mt-3 font-display text-3xl font-bold sm:text-5xl">
                       Fotona® hos Lørenskog Tannlegesenter
                     </h3>
 
-                    <p className="mt-4 max-w-lg leading-relaxed text-white/65">
-                      Vi bruker laser der teknologien kan gi en mer presis,
-                      skånsom og komfortabel behandling.
+                    <p className="mt-4 max-w-xl leading-relaxed text-white/70">
+                      Vi bruker moderne laserteknologi der det kan gi en mer
+                      presis, skånsom og komfortabel behandling – alltid basert
+                      på en individuell vurdering av dine behov.
                     </p>
+
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <span className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/80">
+                        Fotona®-plattform
+                      </span>
+                      <span className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/80">
+                        Presis og målrettet behandling
+                      </span>
+                      <span className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/80">
+                        Skånsom tilnærming
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,10 +376,10 @@ export default function LaserSection() {
 
                   <div>
                     <p className="font-semibold text-white">
-                      Moderne og presist
+                      Presist og skånsomt
                     </p>
-                    <p className="mt-1 text-sm text-white/45">
-                      Behandling tilpasset dine behov
+                    <p className="mt-1 text-sm text-white/50">
+                      Tilpasses hver enkelt behandling
                     </p>
                   </div>
                 </div>
@@ -224,23 +387,117 @@ export default function LaserSection() {
             </div>
           </ScrollReveal>
 
+          {/* Teknologifordeler */}
+          <ScrollReveal y={35}>
+            <div className="mt-28 text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#33B5F5]">
+                Hvorfor laser?
+              </p>
+
+              <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+                Hva gjør teknologien nyttig?
+              </h3>
+
+              <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-white/55">
+                Laserteknologi gir ikke bare moderne utstyr – den gir oss flere
+                måter å behandle på, med høy kontroll og god komfort i mange
+                typer behandlinger.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal
+            className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4"
+            y={35}
+            stagger={0.08}
+          >
+            {technologyFeatures.map((feature) => {
+              const Icon = feature.icon
+
+              return (
+                <article
+                  key={feature.title}
+                  className="rounded-[2rem] border border-white/[0.08] bg-white/[0.045] p-7 backdrop-blur-sm transition-all duration-300 hover:border-[#0099E8]/25 hover:bg-white/[0.06]"
+                >
+                  <div className="inline-flex rounded-2xl border border-[#0099E8]/20 bg-[#0073C9]/15 p-4 text-[#33B5F5]">
+                    <Icon size={28} strokeWidth={1.7} />
+                  </div>
+
+                  <h4 className="mt-5 text-xl font-semibold text-white">
+                    {feature.title}
+                  </h4>
+
+                  <p className="mt-3 leading-relaxed text-white/55">
+                    {feature.description}
+                  </p>
+                </article>
+              )
+            })}
+          </ScrollReveal>
+
+          {/* Behandlingsområder */}
+          <ScrollReveal y={35}>
+            <div className="mt-28 rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-sm sm:p-10">
+              <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#F2A900]">
+                    Behandlingsområder
+                  </p>
+
+                  <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+                    Laser kan brukes i flere typer behandlinger
+                  </h3>
+
+                  <p className="mt-4 max-w-2xl leading-relaxed text-white/58">
+                    Fotona®-plattformen gir oss mulighet til å arbeide innen
+                    både hardt og bløtt vev. Hvilke behandlinger som er aktuelle
+                    for deg vurderes alltid individuelt etter kliniske funn,
+                    behov og mål.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {treatmentGroups.map((group) => (
+                    <div
+                      key={group}
+                      className="rounded-2xl border border-white/10 bg-[#0B1629]/80 px-4 py-4 text-sm text-white/78"
+                    >
+                      <div className="flex items-start gap-3">
+                        <Check
+                          size={16}
+                          className="mt-0.5 shrink-0 text-[#33B5F5]"
+                        />
+                        <span>{group}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
           {/* Behandlingskort */}
           <ScrollReveal y={40}>
-            <div className="mb-10 mt-24 text-center">
+            <div className="mb-10 mt-28 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#33B5F5]">
                 Laserbehandlinger
               </p>
 
               <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
-                Hva tilbyr vi?
+                Hva kan vi hjelpe deg med?
               </h3>
+
+              <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-white/55">
+                Under ser du noen av behandlingsområdene der laser kan være en
+                relevant del av behandlingen.
+              </p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal
-            className="grid gap-5 md:grid-cols-2"
+            className="grid gap-5 md:grid-cols-2 xl:grid-cols-4"
             y={40}
-            stagger={0.1}
+            stagger={0.08}
           >
             {laserTreatments.map((treatment) => {
               const Icon = treatment.icon
@@ -248,7 +505,7 @@ export default function LaserSection() {
               return (
                 <article
                   key={treatment.title}
-                  className="group relative flex min-h-[290px] flex-col overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.045] p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:border-[#0099E8]/30 hover:bg-white/[0.07] hover:shadow-2xl hover:shadow-black/25 sm:p-8"
+                  className="group relative flex min-h-[320px] flex-col overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.045] p-7 backdrop-blur-sm transition-all duration-500 hover:-translate-y-2 hover:border-[#0099E8]/30 hover:bg-white/[0.07] hover:shadow-2xl hover:shadow-black/25"
                 >
                   <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0099E8]/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -257,7 +514,7 @@ export default function LaserSection() {
                       <Icon size={29} strokeWidth={1.5} />
                     </div>
 
-                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/45">
+                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-white/45">
                       {treatment.eyebrow}
                     </span>
                   </div>
@@ -266,9 +523,20 @@ export default function LaserSection() {
                     {treatment.title}
                   </h4>
 
-                  <p className="mt-4 flex-1 leading-relaxed text-white/50">
+                  <p className="mt-4 flex-1 leading-relaxed text-white/54">
                     {treatment.description}
                   </p>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {treatment.benefits.slice(0, 2).map((benefit) => (
+                      <span
+                        key={benefit}
+                        className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-white/60"
+                      >
+                        {benefit}
+                      </span>
+                    ))}
+                  </div>
 
                   <button
                     type="button"
@@ -276,7 +544,6 @@ export default function LaserSection() {
                     className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#33B5F5] transition-colors hover:text-white"
                   >
                     Les mer
-
                     <ArrowRight
                       size={17}
                       className="transition-transform duration-300 group-hover:translate-x-1"
@@ -287,20 +554,67 @@ export default function LaserSection() {
             })}
           </ScrollReveal>
 
+          {/* Trygghet / vurdering */}
+          <ScrollReveal y={30}>
+            <div className="mt-24 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="rounded-[2rem] border border-white/10 bg-[#0B1629]/90 p-8">
+                <div className="inline-flex rounded-2xl border border-[#F2A900]/20 bg-[#F2A900]/10 p-4 text-[#F2A900]">
+                  <Stethoscope size={28} />
+                </div>
+
+                <h3 className="mt-5 font-display text-2xl font-bold">
+                  Individuell vurdering først
+                </h3>
+
+                <p className="mt-4 leading-relaxed text-white/60">
+                  Ikke alle behandlinger passer for alle. Derfor starter vi med
+                  en vurdering av symptomer, kliniske funn og behandlingsmål før
+                  vi anbefaler om laser er riktig løsning for deg.
+                </p>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/10 bg-gradient-to-r from-[#0073C9]/15 to-[#0099E8]/5 p-8">
+                <div className="inline-flex rounded-2xl border border-[#0099E8]/20 bg-[#0073C9]/15 p-4 text-[#33B5F5]">
+                  <CircleHelp size={28} />
+                </div>
+
+                <h3 className="mt-5 font-display text-2xl font-bold">
+                  Hva kan du forvente?
+                </h3>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white/70">
+                    Presis og målrettet behandling i utvalgte områder
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white/70">
+                    Skånsom tilnærming med moderne utstyr
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white/70">
+                    Behandlingsplan som tilpasses dine behov
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white/70">
+                    Tydelig forklaring før behandling starter
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
           {/* CTA */}
           <ScrollReveal y={30}>
             <div className="mt-16 flex flex-col items-center rounded-[2rem] border border-white/10 bg-gradient-to-r from-[#0073C9]/15 to-[#0099E8]/5 px-6 py-10 text-center backdrop-blur-sm sm:px-10">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#F2A900]">
-                Er laserbehandling riktig for deg?
+                Er laserbehandling aktuelt for deg?
               </p>
 
               <h3 className="mt-4 font-display text-3xl font-bold">
                 Bestill en personlig konsultasjon
               </h3>
 
-              <p className="mt-4 max-w-xl leading-relaxed text-white/50">
+              <p className="mt-4 max-w-2xl leading-relaxed text-white/55">
                 Vi vurderer dine behov og forklarer hvilke muligheter
-                laserteknologien kan gi.
+                laserteknologien kan gi – og om dette er riktig behandling for
+                deg.
               </p>
 
               <button
@@ -333,7 +647,7 @@ export default function LaserSection() {
             }
           }}
         >
-          <div className="relative max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-[2rem] border border-white/10 bg-[#0B1629] p-6 text-white shadow-2xl shadow-black/50 sm:rounded-[2rem] sm:p-9">
+          <div className="relative max-h-[92dvh] w-full max-w-3xl overflow-y-auto rounded-t-[2rem] border border-white/10 bg-[#0B1629] p-6 text-white shadow-2xl shadow-black/50 sm:rounded-[2rem] sm:p-9">
             <button
               type="button"
               onClick={() => setSelectedTreatment(null)}
@@ -356,27 +670,52 @@ export default function LaserSection() {
               </h2>
             </div>
 
-            <p className="mt-6 leading-relaxed text-white/60">
+            <p className="mt-6 leading-relaxed text-white/62">
               {selectedTreatment.details}
             </p>
 
-            <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-              <h3 className="text-lg font-semibold">Fordeler</h3>
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+                <h3 className="text-lg font-semibold">Kan være aktuelt ved</h3>
 
-              <ul className="mt-5 space-y-4">
-                {selectedTreatment.benefits.map((benefit) => (
-                  <li
-                    key={benefit}
-                    className="flex items-start gap-3 text-white/65"
-                  >
-                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0073C9]/20 text-[#33B5F5]">
-                      <Check size={14} strokeWidth={2.5} />
-                    </span>
+                <ul className="mt-5 space-y-4">
+                  {selectedTreatment.idealFor.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-white/65"
+                    >
+                      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0073C9]/20 text-[#33B5F5]">
+                        <Check size={14} strokeWidth={2.5} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+                <h3 className="text-lg font-semibold">Mulige fordeler</h3>
+
+                <ul className="mt-5 space-y-4">
+                  {selectedTreatment.benefits.map((benefit) => (
+                    <li
+                      key={benefit}
+                      className="flex items-start gap-3 text-white/65"
+                    >
+                      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0073C9]/20 text-[#33B5F5]">
+                        <Check size={14} strokeWidth={2.5} />
+                      </span>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 rounded-3xl border border-[#F2A900]/15 bg-[#F2A900]/8 p-5 text-sm leading-relaxed text-white/70">
+              Behandlingsopplegg og egnethet vurderes alltid individuelt. Vi
+              forklarer hva som passer for deg, hva du kan forvente, og hvilke
+              alternativer som finnes.
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">

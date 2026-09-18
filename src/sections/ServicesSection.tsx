@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import {
   Activity,
@@ -13,7 +13,6 @@ import {
   Syringe,
   WandSparkles,
   Wrench,
-  X,
 } from 'lucide-react'
 
 import ScrollReveal from '@/components/ScrollReveal'
@@ -383,283 +382,249 @@ const services: Service[] = [
 ]
 
 export default function ServicesSection() {
-  const [selectedService, setSelectedService] = useState<Service | null>(null)
-
-  useEffect(() => {
-    if (!selectedService) return
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSelectedService(null)
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [selectedService])
+  const [activeService, setActiveService] = useState<Service>(services[0])
 
   const scrollToContact = () => {
-    setSelectedService(null)
-
-    window.setTimeout(() => {
-      document
-        .querySelector('#kontakt')
-        ?.scrollIntoView({ behavior: 'smooth' })
-    }, 100)
+    document
+      .querySelector('#kontakt')
+      ?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <>
-      <section
-        id="tjenester"
-        className="relative overflow-hidden bg-[#0B1120] py-24 md:py-32"
-      >
-        {/* Bakgrunnseffekter */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0B1120] to-transparent" />
+    <section
+      id="tjenester"
+      className="relative overflow-hidden bg-[#0B1120] py-24 md:py-32"
+    >
+      {/* Bakgrunnseffekter */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#0B1120] to-transparent" />
+      <div className="pointer-events-none absolute -left-32 top-1/3 h-80 w-80 rounded-full bg-[#0073C9]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-[#F2A900]/10 blur-[120px]" />
 
-        <div className="pointer-events-none absolute -left-32 top-1/3 h-80 w-80 rounded-full bg-[#0073C9]/10 blur-[120px]" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <ScrollReveal y={30}>
+          <div className="mb-14 text-center">
+            <span className="inline-block rounded-full bg-[#0073C9]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#0099E8]">
+              Våre behandlinger
+            </span>
 
-        <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-[#F2A900]/10 blur-[120px]" />
+            <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
+              Trygg tannbehandling{' '}
+              <span className="gradient-text">tilpasset dine behov</span>
+            </h2>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal y={30}>
-            <div className="mb-16 text-center">
-              <span className="inline-block rounded-full bg-[#0073C9]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#0099E8]">
-                Våre behandlinger
-              </span>
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/65">
+              Velg behandling for å se informasjon, fordeler og hvordan behandlingen foregår.
+            </p>
+          </div>
+        </ScrollReveal>
 
-              <h2 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
-                Trygg tannbehandling{' '}
-                <span className="gradient-text">tilpasset dine behov</span>
-              </h2>
+        <ScrollReveal y={40}>
+          <div className="overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.025] shadow-2xl shadow-black/10">
+            <div className="grid lg:min-h-[780px] lg:grid-cols-[0.78fr_1.22fr]">
+              {/* Behandlingsvelger */}
+              <div className="border-b border-white/[0.08] p-3 sm:p-4 lg:border-b-0 lg:border-r lg:p-5">
+                <div className="mb-3 hidden px-4 pt-2 lg:block">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/55">
+                    Velg behandling
+                  </p>
+                </div>
 
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/45">
-                Fra undersøkelser og akutt hjelp til reparasjon, erstatning og
-                estetisk behandling.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal
-            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-            y={40}
-            stagger={0.07}
-          >
-            {services.map((service) => {
-              const Icon = service.icon
-
-              return (
-                <article
-                  key={service.title}
-                  className="group relative flex min-h-[285px] flex-col overflow-hidden rounded-3xl border border-white/[0.07] bg-white/[0.035] p-8 transition-all duration-500 hover:-translate-y-2 hover:border-[#0099E8]/25 hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-black/20"
+                <div
+                  className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-1.5"
+                  role="list"
+                  aria-label="Behandlinger"
                 >
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0099E8]/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  {services.map((service) => {
+                    const Icon = service.icon
+                    const isActive = activeService.title === service.title
+                    const isEmergency = service.title === 'Tannlegevakt'
 
-                  <div className="mb-6 inline-flex w-fit rounded-2xl border border-white/[0.08] bg-white/[0.05] p-4 transition-all duration-500 group-hover:scale-105 group-hover:border-[#0099E8]/20 group-hover:bg-[#0073C9]/15">
-                    <Icon
-                      size={28}
-                      className="text-[#0099E8]"
-                      strokeWidth={1.5}
+                    return (
+                      <button
+                        key={service.title}
+                        type="button"
+                        onClick={() => setActiveService(service)}
+                        onFocus={() => setActiveService(service)}
+                        aria-pressed={isActive}
+                        className={`group relative flex min-h-[62px] items-center gap-3 overflow-hidden rounded-2xl px-3.5 py-3 text-left transition-all duration-300 sm:px-4 ${
+                          isActive
+                            ? 'bg-[#0073C9]/20 text-white shadow-lg shadow-black/10'
+                            : 'text-white/[0.88] hover:bg-white/[0.06] hover:text-white'
+                        }`}
+                      >
+                        <span
+                          className={`absolute inset-y-3 left-0 w-[3px] rounded-full transition-all duration-300 ${
+                            isActive
+                              ? 'bg-[#0099E8] opacity-100'
+                              : 'bg-[#0099E8] opacity-0'
+                          }`}
+                        />
+
+                        <span
+                          className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${
+                            isActive
+                              ? 'border-[#33B5F5]/45 bg-[#0073C9]/30 text-[#66C8F7]'
+                              : 'border-[#0099E8]/20 bg-[#0073C9]/[0.12] text-[#33B5F5] group-hover:border-[#33B5F5]/35 group-hover:bg-[#0073C9]/20 group-hover:text-[#66C8F7]'
+                          }`}
+                        >
+                          <Icon size={21} strokeWidth={1.7} />
+                        </span>
+
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span className="truncate text-sm font-semibold text-white sm:text-[15px]">
+                              {service.title}
+                            </span>
+
+                            {isEmergency && (
+                              <span className="hidden rounded-full border border-[#F2A900]/20 bg-[#F2A900]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#F2A900] sm:inline-flex">
+                                Akutt
+                              </span>
+                            )}
+                          </span>
+                        </span>
+
+                        <span
+                          className={`hidden text-lg transition-all duration-300 lg:block ${
+                            isActive
+                              ? 'translate-x-0 text-[#0099E8] opacity-100'
+                              : '-translate-x-1 text-white/20 opacity-0 group-hover:translate-x-0 group-hover:opacity-100'
+                          }`}
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Aktiv behandling – all informasjon vises direkte her */}
+              <div className="relative min-w-0 overflow-hidden p-6 sm:p-8 lg:p-9 xl:p-10">
+                <div className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-[#0073C9]/[0.12] blur-[90px]" />
+                <div className="pointer-events-none absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-[#0099E8]/[0.06] blur-[100px]" />
+
+                <div className="relative">
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#33B5F5]/35 bg-[#0073C9]/25 text-[#66C8F7] shadow-lg shadow-[#0073C9]/10 sm:h-16 sm:w-16">
+                        <activeService.icon
+                          size={29}
+                          strokeWidth={1.5}
+                          key={activeService.title}
+                        />
+                      </div>
+
+                      <div>
+                        {activeService.title === 'Tannlegevakt' && (
+                          <span className="mb-1.5 inline-flex rounded-full border border-[#F2A900]/20 bg-[#F2A900]/[0.07] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-[#F2A900]">
+                            Akutt hjelp
+                          </span>
+                        )}
+                        <h3 className="font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+                          {activeService.title}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="mt-5 max-w-3xl text-[15px] leading-7 text-white/[0.72] sm:text-base">
+                    {activeService.intro}
+                  </p>
+
+                  <div className="mt-7 grid gap-5 xl:grid-cols-2">
+                    <CompactInfoBlock
+                      title={activeService.relevantTitle ?? 'Når er det aktuelt?'}
+                      items={activeService.relevant}
+                    />
+
+                    <CompactInfoBlock
+                      title={activeService.benefitsTitle ?? 'Fordeler'}
+                      items={activeService.benefits}
+                      accent="gold"
                     />
                   </div>
 
-                  <h3 className="text-xl font-semibold text-white">
-                    {service.title}
-                  </h3>
+                  <div className="mt-5 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5 sm:p-6">
+                    <h4 className="text-base font-semibold text-white sm:text-lg">
+                      {activeService.processTitle ?? 'Slik foregår behandlingen'}
+                    </h4>
 
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-white/45">
-                    {service.description}
-                  </p>
+                    <ol className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                      {activeService.process.map((step, index) => (
+                        <li
+                          key={step}
+                          className="flex items-start gap-3 text-[13px] leading-5 text-white/[0.68] sm:text-sm"
+                        >
+                          <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0073C9]/20 text-[11px] font-bold text-[#66C8F7]">
+                            {index + 1}
+                          </span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setSelectedService(service)}
-                    aria-label={`Les mer om ${service.title}`}
-                    className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#0099E8] transition-all duration-300 hover:text-[#33B5F5]"
-                  >
-                    Les mer
+                  {activeService.note && (
+                    <div className="mt-5 rounded-2xl border border-[#F2A900]/15 bg-[#F2A900]/[0.05] px-4 py-3.5">
+                      <p className="text-[13px] leading-5 text-white/[0.62] sm:text-sm">
+                        <span className="font-semibold text-[#F2A900]">Viktig:</span>{' '}
+                        {activeService.note}
+                      </p>
+                    </div>
+                  )}
 
-                    <span className="transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  </button>
-                </article>
-              )
-            })}
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Behandlingsmodal */}
-      {selectedService && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="service-dialog-title"
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-[#020617]/80 p-0 backdrop-blur-md sm:items-center sm:p-6"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setSelectedService(null)
-            }
-          }}
-        >
-          <div className="relative flex max-h-[94dvh] w-full max-w-4xl flex-col overflow-hidden rounded-t-[2rem] border border-white/10 bg-[#0D1526] shadow-2xl shadow-black/50 sm:max-h-[90dvh] sm:rounded-[2rem]">
-            {/* Modal-topp */}
-            <div className="relative border-b border-white/10 px-6 py-6 sm:px-9 sm:py-8">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0073C9]/15 via-transparent to-[#F2A900]/10" />
-
-              <div className="relative flex items-start gap-5 pr-12">
-                <div className="hidden shrink-0 rounded-2xl border border-[#0099E8]/20 bg-[#0073C9]/15 p-4 sm:flex">
-                  <selectedService.icon
-                    size={30}
-                    className="text-[#0099E8]"
-                    strokeWidth={1.5}
-                  />
-                </div>
-
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0099E8]">
-                    Behandling
-                  </p>
-
-                  <h2
-                    id="service-dialog-title"
-                    className="mt-2 font-display text-3xl font-bold text-white sm:text-4xl"
-                  >
-                    {selectedService.title}
-                  </h2>
-
-                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55 sm:text-base">
-                    {selectedService.intro}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSelectedService(null)}
-                aria-label="Lukk behandlingsinformasjon"
-                className="absolute right-5 top-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/60 transition hover:bg-white/10 hover:text-white sm:right-7 sm:top-7"
-              >
-                <X size={22} />
-              </button>
-            </div>
-
-            {/* Rullbart innhold */}
-            <div className="overflow-y-auto overscroll-contain px-6 py-7 sm:px-9 sm:py-9">
-              <div className="grid gap-8 lg:grid-cols-2">
-                <InformationBlock
-                  title={selectedService.relevantTitle ?? 'Når er det aktuelt?'}
-                  items={selectedService.relevant}
-                />
-
-                <InformationBlock
-                  title={selectedService.benefitsTitle ?? 'Fordeler'}
-                  items={selectedService.benefits}
-                  accent="gold"
-                />
-              </div>
-
-              <div className="mt-9 rounded-3xl border border-white/[0.08] bg-white/[0.035] p-6 sm:p-8">
-                <h3 className="text-xl font-semibold text-white">
-                  {selectedService.processTitle ??
-                    'Slik foregår behandlingen'}
-                </h3>
-
-                <ol className="mt-6 space-y-5">
-                  {selectedService.process.map((step, index) => (
-                    <li
-                      key={step}
-                      className="flex items-start gap-4 text-sm leading-relaxed text-white/60 sm:text-base"
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={scrollToContact}
+                      className="inline-flex min-h-12 items-center justify-center rounded-full bg-gradient-to-r from-[#0073C9] to-[#0099E8] px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0073C9]/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0073C9]/30"
                     >
-                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0073C9]/20 text-sm font-bold text-[#33B5F5]">
-                        {index + 1}
-                      </span>
-
-                      <span className="pt-1">{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              {selectedService.note && (
-                <div className="mt-7 rounded-2xl border border-[#F2A900]/15 bg-[#F2A900]/[0.06] px-5 py-4">
-                  <p className="text-sm leading-relaxed text-white/55">
-                    <span className="font-semibold text-[#F2A900]">
-                      Viktig:
-                    </span>{' '}
-                    {selectedService.note}
-                  </p>
+                      Bestill time
+                    </button>
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {/* Modal-knapper */}
-            <div className="border-t border-white/10 bg-[#0B1120]/90 px-6 py-5 backdrop-blur-xl sm:px-9">
-              <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  onClick={() => setSelectedService(null)}
-                  className="min-h-12 rounded-full border border-white/15 bg-white/[0.04] px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
-                >
-                  Lukk
-                </button>
-
-                <button
-                  type="button"
-                  onClick={scrollToContact}
-                  className="min-h-12 rounded-full bg-gradient-to-r from-[#0073C9] to-[#0099E8] px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0073C9]/25 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0073C9]/35"
-                >
-                  Bestill time
-                </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </>
+        </ScrollReveal>
+      </div>
+    </section>
   )
 }
 
-type InformationBlockProps = {
+type CompactInfoBlockProps = {
   title: string
   items: string[]
   accent?: 'blue' | 'gold'
 }
 
-function InformationBlock({
+function CompactInfoBlock({
   title,
   items,
   accent = 'blue',
-}: InformationBlockProps) {
+}: CompactInfoBlockProps) {
   const iconClasses =
     accent === 'gold'
       ? 'bg-[#F2A900]/15 text-[#F2A900]'
-      : 'bg-[#0073C9]/20 text-[#33B5F5]'
+      : 'bg-[#0073C9]/20 text-[#66C8F7]'
 
   return (
-    <div>
-      <h3 className="text-xl font-semibold text-white">{title}</h3>
+    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5 sm:p-6">
+      <h4 className="text-base font-semibold text-white sm:text-lg">{title}</h4>
 
-      <ul className="mt-5 space-y-4">
+      <ul className="mt-4 space-y-2.5">
         {items.map((item) => (
           <li
             key={item}
-            className="flex items-start gap-3 text-sm leading-relaxed text-white/60 sm:text-base"
+            className="flex items-start gap-2.5 text-[13px] leading-5 text-white/[0.68] sm:text-sm"
           >
             <span
-              className={`mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${iconClasses}`}
+              className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${iconClasses}`}
             >
-              <Check size={14} strokeWidth={2.5} />
+              <Check size={11} strokeWidth={2.7} />
             </span>
-
             <span>{item}</span>
           </li>
         ))}

@@ -6,6 +6,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import CookieBanner from '@/components/CookieBanner'
+import ClinicAssistant from '@/components/ClinicAssistant'
+import TreatmentGuide from '@/components/TreatmentGuide'
 
 import HeroSection from '@/sections/HeroSection'
 import ServicesSection from '@/sections/ServicesSection'
@@ -44,8 +46,9 @@ function PublicWebsite() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#0B1120]">
+    <div className="relative min-h-screen bg-[#0B1120]">
       <Navigation />
+      <TreatmentGuide />
 
       <main>
         <HeroSection />
@@ -60,6 +63,7 @@ function PublicWebsite() {
       </main>
 
       <Footer />
+      <ClinicAssistant />
       <CookieBanner />
     </div>
   )

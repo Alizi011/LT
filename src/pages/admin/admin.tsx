@@ -6,7 +6,10 @@ import {
   CircleDollarSign,
   Clock3,
   ExternalLink,
+  FileText,
   LayoutDashboard,
+  LockKeyhole,
+  LogOut,
   Menu,
   MessageSquareText,
   Pencil,
@@ -74,6 +77,11 @@ const initialPrices: PriceItem[] = [
 ]
 
 const storageKey = 'lt-admin-draft-v1'
+const authKey = 'lt-admin-auth-v1'
+
+// Enkel frontend-innlogging. Bytt passordet før publisering.
+// Dette er kun en enkel sperre og ikke sikker autentisering for sensitive data.
+const ADMIN_PASSWORD = 'abc123'
 
 function loadDraft() {
   try {
@@ -95,10 +103,101 @@ function StatusPill({ children, tone = 'blue' }: { children: React.ReactNode; to
 }
 
 export default function Admin() {
+  const [loggedIn, setLoggedIn] = useState(() => {
+    try {
+      return window.sessionStorage.getItem(authKey) === 'true'
+    } catch {
+      return false
+    }
+  })
+  const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
+
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (password === ADMIN_PASSWORD) {
+      window.sessionStorage.setItem(authKey, 'true')
+      setLoggedIn(true)
+      setPassword('')
+      setLoginError('')
+      return
+    }
+
+    setLoginError('Feil passord')
+  }
+
+  const handleLogout = () => {
+    window.sessionStorage.removeItem(authKey)
+    setLoggedIn(false)
+    setPassword('')
+    setLoginError('')
+  }
+
+  if (!loggedIn) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#F5F7FA] px-4">
+        <div className="w-full max-w-md rounded-3xl border border-[#E7ECF2] bg-white p-8 shadow-[0_20px_70px_rgba(15,23,42,0.10)] sm:p-10">
+          <div className="mb-8 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EAF4FC] text-[#0073C9]">
+              <LockKeyhole size={22} />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Lørenskog Tannlegesenter</p>
+              <p className="mt-0.5 text-xs text-[#7B8794]">Administrasjon</p>
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-bold tracking-tight text-[#0B1120]">Logg inn</h1>
+          <p className="mt-2 text-sm leading-relaxed text-[#75818E]">
+            Skriv inn admin-passordet for å åpne kontrollpanelet.
+          </p>
+
+          <form onSubmit={handleLogin} className="mt-7">
+            <Label htmlFor="admin-password">Passord</Label>
+            <Input
+              id="admin-password"
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value)
+                if (loginError) setLoginError('')
+              }}
+              autoComplete="current-password"
+              autoFocus
+              className="mt-2 h-12 border-[#E4EAF0]"
+              placeholder="Admin-passord"
+            />
+
+            {loginError && (
+              <p className="mt-3 text-sm font-medium text-red-600">{loginError}</p>
+            )}
+
+            <Button
+              type="submit"
+              className="mt-6 h-12 w-full rounded-xl bg-[#0073C9] text-white hover:bg-[#0065AF]"
+            >
+              Logg inn
+            </Button>
+          </form>
+
+          <a href="/" className="mt-6 block text-center text-xs font-medium text-[#7B8794] hover:text-[#0073C9]">
+            Tilbake til nettsiden
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  return <AdminPanel onLogout={handleLogout} />
+}
+
+function AdminPanel({ onLogout }: { onLogout: () => void }) {
   const draft = useMemo(() => loadDraft(), [])
   const [active, setActive] = useState<NavId>('dashboard')
   const [mobileOpen, setMobileOpen] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [offerOpen, setOfferOpen] = useState(false)
   const [treatments, setTreatments] = useState<Treatment[]>(draft?.treatments ?? initialTreatments)
   const [prices, setPrices] = useState<PriceItem[]>(draft?.prices ?? initialPrices)
   const [settings, setSettings] = useState(draft?.settings ?? {
@@ -110,7 +209,17 @@ export default function Admin() {
   })
 
   const saveDraft = () => {
-    window.localStorage.setItem(storageKey, JSON.stringify({ treatments, prices, settings }))
+    const payload = { treatments, prices, settings }
+
+    window.localStorage.setItem(storageKey, JSON.stringify(payload))
+
+    // Oppdater forsiden umiddelbart dersom den er åpen i samme nettleservindu.
+    window.dispatchEvent(
+      new CustomEvent('lt-admin-content-updated', {
+        detail: payload,
+      }),
+    )
+
     setSaved(true)
     window.setTimeout(() => setSaved(false), 2200)
   }
@@ -179,10 +288,62 @@ export default function Admin() {
             <Bell size={18} />
             <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#0073C9]" />
           </button>
+          <button
+            onClick={onLogout}
+            className="hidden items-center gap-2 rounded-xl border border-[#E6EBF1] px-3 py-2.5 text-sm font-medium text-[#5A6876] transition hover:bg-[#F7F9FB] sm:flex"
+          >
+            <LogOut size={16} />
+            Logg ut
+          </button>
           <Button onClick={saveDraft} className="rounded-xl bg-[#0073C9] px-4 text-white hover:bg-[#0065AF]">
             <Save size={16} className="mr-2" /> {saved ? 'Lagret' : 'Lagre'}
           </Button>
         </header>
+
+        <div className="border-b border-[#DDE5EC] bg-white">
+          <button
+            type="button"
+            onClick={() => setOfferOpen((current) => !current)}
+            className="flex w-full animate-pulse items-center gap-4 bg-[#0073C9] px-4 py-3 text-left text-white transition hover:bg-[#0065AF] sm:px-6 lg:px-10"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
+              <FileText size={17} />
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="text-sm font-bold text-white">Pristilbud</span>
+                <span className="hidden text-xs text-white/70 sm:inline">Ny nettside for Lørenskog Tannlegesenter</span>
+              </div>
+              <p className="mt-0.5 text-xs text-white/80">
+                59 000 kr eks. mva. · Klikk for å {offerOpen ? 'lukke' : 'åpne'} tilbudet
+              </p>
+            </div>
+
+            <div className="ml-auto flex shrink-0 items-center gap-3">
+              <div className="hidden text-right sm:block">
+                <p className="text-sm font-bold text-[#0B1120]">59 000 kr</p>
+                <p className="text-[11px] text-white/70">eks. mva.</p>
+              </div>
+
+              <div className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white transition-transform duration-300 ${offerOpen ? 'rotate-90' : 'rotate-0'}`}>
+                <ChevronRight size={17} />
+              </div>
+            </div>
+          </button>
+
+          <div
+            className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out ${
+              offerOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+            }`}
+          >
+            <div className="min-h-0">
+              <div className="border-t border-[#E8EDF2] bg-[#F8FAFC] px-4 py-6 sm:px-6 lg:px-10">
+                <OfferDetails />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <main className="p-4 sm:p-6 lg:p-10">
           {active === 'dashboard' && <Dashboard onNavigate={setActive} treatments={treatments} prices={prices} />}
@@ -260,7 +421,7 @@ function Dashboard({ onNavigate, treatments, prices }: { onNavigate: (id: NavId)
             <StatusRow label="Offentlig nettside" value="Aktiv" ok />
             <StatusRow label="Admin-grensesnitt" value="Aktiv" ok />
             <StatusRow label="Database" value="Ikke koblet" />
-            <StatusRow label="Sikker innlogging" value="Ikke koblet" />
+            <StatusRow label="Innlogging" value="Enkel frontend" />
           </div>
           <div className="mt-5 rounded-xl bg-amber-50 p-4 text-xs leading-relaxed text-amber-800">
             Denne versjonen lagrer endringer som lokalt admin-utkast. Backend og autentisering må kobles før admin brukes i produksjon.
@@ -342,6 +503,138 @@ function TeamPanel() {
     <AdminSection title="Team" description="Forbered presentasjon av tannleger og klinikkpersonell." action={<Button className="rounded-xl bg-[#0B1120] text-white"><Plus size={16} className="mr-2" />Ny ansatt</Button>}>
       <div className="rounded-2xl border border-dashed border-[#CAD3DD] bg-white p-12 text-center"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EEF6FD] text-[#0073C9]"><Users /></div><h3 className="mt-4 font-bold">Ingen teamprofiler lagt inn ennå</h3><p className="mx-auto mt-2 max-w-md text-sm text-[#85919D]">Her kan vi senere legge inn navn, rolle, bilde, kompetanse og presentasjonstekst.</p></div>
     </AdminSection>
+  )
+}
+
+
+function OfferDetails() {
+  const offerLines = [
+    ['Design og visuelt oppsett', '8 000 kr'],
+    ['Utvikling av nettside', '18 000 kr'],
+    ['Responsiv tilpasning og animasjoner', '6 000 kr'],
+    ['Behandlings-, laser- og prisinnhold', '6 000 kr'],
+    ['Adminløsning og innholdsredigering', '8 000 kr'],
+    ['Digital klinikkassistent / chatbot', '3 000 kr'],
+    ['Produksjonsoppsett, e-post og database', '10 000 kr'],
+  ]
+
+  return (
+    <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl border border-[#CFE5F6] bg-[#EAF4FC] shadow-[0_18px_60px_rgba(15,23,42,0.06)]">
+      <div className="border-b border-[#E8EDF2] bg-[#0B1120] p-6 text-white sm:p-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#59B9F2]">Pristilbud</p>
+            <h3 className="mt-2 text-2xl font-bold sm:text-3xl">Ny nettside for Lørenskog Tannlegesenter</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">
+              Design, utvikling og ferdig produksjonsoppsett av moderne nettside med behandlingsinnhold,
+              Fotona/laser, prisvisning, administrasjonspanel, digital klinikkassistent, e-post og database.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 sm:text-right">
+            <p className="text-xs text-white/50">Tilbudssum eks. mva.</p>
+            <p className="mt-1 text-3xl font-bold">59 000 kr</p>
+            <p className="mt-1 text-xs text-white/45">73 750 kr inkl. mva.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-7 bg-[#EAF4FC] p-6 sm:p-8 lg:grid-cols-[1.3fr_.7fr]">
+        <div>
+          <h4 className="text-base font-bold">Leveransen omfatter</h4>
+
+          <div className="mt-4 overflow-hidden rounded-xl border border-[#CFE5F6] bg-white">
+            {offerLines.map(([label, price], index) => (
+              <div
+                key={label}
+                className={`flex items-center justify-between gap-5 px-4 py-3.5 text-sm ${
+                  index !== offerLines.length - 1 ? 'border-b border-[#EDF1F4]' : ''
+                }`}
+              >
+                <span className="text-[#53606D]">{label}</span>
+                <span className="shrink-0 font-semibold text-[#0B1120]">{price}</span>
+              </div>
+            ))}
+          </div>
+
+          <h4 className="mt-7 text-base font-bold">Inkludert i leveransen</h4>
+
+          <ul className="mt-4 space-y-2.5 rounded-xl border border-[#CFE5F6] bg-white/75 p-5 text-sm text-[#53606D]">
+            {[
+              'Skreddersydd nettside',
+              'Responsivt design for mobil og desktop',
+              'Behandlinger og prisstruktur',
+              'Fotona / laserpresentasjon',
+              'Anmeldelser og kontaktseksjon',
+              'Animasjoner og moderne brukeropplevelse',
+              'Oppsett og publisering på one.com',
+              'Domene- og DNS-konfigurasjon',
+              'Oppsett av profesjonelle e-postadresser',
+              'Databaseoppsett for nettsidens innhold',
+              'Kobling mellom adminpanelet og databasen',
+              'Kontakt- og henvendelsesoppsett mot klinikkens e-post',
+              'Digital klinikkassistent for vanlige spørsmål og veiledning',
+              'Testing før lansering',
+              'Grunnleggende backup- og driftsoppsett',
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 leading-relaxed">
+                <span className="mt-[7px] h-2 w-2 shrink-0 rounded-full bg-[#0073C9]" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 space-y-3">
+            <div className="rounded-xl border border-[#CFE5F6] bg-white/80 p-4 text-sm leading-relaxed text-[#315A78]">
+              Den digitale klinikkassistenten settes opp for vanlige spørsmål om behandlinger, priser,
+              åpningstider, laser, tannlegeskrekk, kontakt og timebestilling. Løsningen kan leveres med
+              styrte svar uten løpende AI-kostnad. Eventuell senere tilkobling til en ekstern AI-tjeneste
+              med forbruksbasert kostnad avtales separat.
+            </div>
+
+            <div className="rounded-xl border border-[#CFE5F6] bg-white/80 p-4 text-sm leading-relaxed text-[#315A78]">
+              Databaseoppsettet gjelder nettsidens innhold, priser, behandlinger og administrasjon.
+              Lagring av pasientjournaler, helseopplysninger eller annen sensitiv pasientinformasjon
+              er ikke inkludert i denne leveransen og må eventuelt avtales som et eget prosjekt.
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="rounded-2xl border border-[#CFE5F6] bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8793A0]">Pris</p>
+
+            <div className="mt-5 space-y-4">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#697684]">Sum eks. mva.</span>
+                <span className="font-semibold">59 000 kr</span>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#697684]">Mva. 25 %</span>
+                <span className="font-semibold">14 750 kr</span>
+              </div>
+
+              <div className="border-t border-[#DDE5EC] pt-4">
+                <div className="flex items-end justify-between gap-4">
+                  <span className="text-sm font-semibold">Totalt inkl. mva.</span>
+                  <span className="text-2xl font-bold text-[#0073C9]">73 750 kr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-[#E7ECF2] bg-white p-6">
+            <h4 className="font-bold">Forutsetninger</h4>
+            <div className="mt-4 space-y-3 text-sm leading-relaxed text-[#6F7B87]">
+              <p>Tilbudet gjelder nettsiden, administrasjonspanel, produksjonsoppsett på one.com, e-postoppsett og database for nettsidens innhold.</p>
+              <p>Større nye funksjoner, eksterne integrasjoner, avansert booking, pasientportal eller behandling av sensitive pasientdata avtales separat.</p>
+              <p>Eventuelle abonnementer og tredjepartskostnader hos one.com, domeneleverandør eller andre eksterne tjenester faktureres av leverandøren og kommer i tillegg dersom de oppstår.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

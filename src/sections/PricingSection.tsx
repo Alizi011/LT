@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react'
 import ScrollReveal from '@/components/ScrollReveal'
 
 interface PriceItem {
@@ -11,7 +12,21 @@ interface PriceCard {
   items: PriceItem[]
 }
 
-const priceCards: PriceCard[] = [
+interface AdminPriceItem {
+  id: number
+  category: string
+  name: string
+  price: string
+  active: boolean
+}
+
+interface AdminDraft {
+  prices?: AdminPriceItem[]
+}
+
+const STORAGE_KEY = 'lt-admin-draft-v1'
+
+const defaultPriceCards: PriceCard[] = [
   {
     title: 'Undersøkelse og rens',
     gradient: 'from-[#0073C9] to-[#0099E8]',
@@ -122,7 +137,129 @@ const priceCards: PriceCard[] = [
   },
 ]
 
+/*
+  Midlertidig demo-kobling:
+  ID-ene er de samme som i admin.tsx akkurat nå.
+  På denne måten kan eksisterende adminpriser oppdatere riktige
+  prislinjer på forsiden selv om tekstene ikke er helt identiske.
+*/
+const adminIdToPublicItem: Record<
+  number,
+  { cardTitle: string; itemName: string }
+> = {
+  1: {
+    cardTitle: 'Undersøkelse og rens',
+    itemName: 'Undersøkelse inkl. røntgen, enkel rens og puss',
+  },
+  2: {
+    cardTitle: 'Undersøkelse og rens',
+    itemName: 'Akutt undersøkelse',
+  },
+  3: {
+    cardTitle: 'Undersøkelse og rens',
+    itemName: 'Røntgenbilde',
+  },
+  4: {
+    cardTitle: 'Fylling og rotfylling',
+    itemName: 'Fylling – 1 flate',
+  },
+  5: {
+    cardTitle: 'Fylling og rotfylling',
+    itemName: 'Fylling – 2 flater',
+  },
+  6: {
+    cardTitle: 'Fylling og rotfylling',
+    itemName: 'Rotfylling – fortann',
+  },
+  7: {
+    cardTitle: 'Protetikk og estetikk',
+    itemName: 'Tannkrone inkl. hygienetiltak og bedøvelse',
+  },
+  8: {
+    cardTitle: 'Protetikk og estetikk',
+    itemName: 'Tannbleking – 2 kjever',
+  },
+}
+
+function readAdminPrices(): AdminPriceItem[] | null {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY)
+
+    if (!raw) return null
+
+    const parsed = JSON.parse(raw) as AdminDraft
+
+    if (!Array.isArray(parsed.prices)) return null
+
+    return parsed.prices
+  } catch {
+    return null
+  }
+}
+
 export default function PricingSection() {
+  const [adminPrices, setAdminPrices] = useState<AdminPriceItem[] | null>(() =>
+    readAdminPrices(),
+  )
+
+  useEffect(() => {
+    const refreshPrices = () => {
+      setAdminPrices(readAdminPrices())
+    }
+
+    // Hvis admin lagrer i en annen fane.
+    window.addEventListener('storage', refreshPrices)
+
+    // Hvis admin og nettsiden kjører i samme fane/session.
+    window.addEventListener('lt-admin-content-updated', refreshPrices)
+
+    return () => {
+      window.removeEventListener('storage', refreshPrices)
+      window.removeEventListener('lt-admin-content-updated', refreshPrices)
+    }
+  }, [])
+
+  const priceCards = useMemo<PriceCard[]>(() => {
+    if (!adminPrices?.length) {
+      return defaultPriceCards
+    }
+
+    return defaultPriceCards
+      .map((card) => {
+        const items = card.items
+          .map((item) => {
+            const adminItem = adminPrices.find((candidate) => {
+              const mapping = adminIdToPublicItem[candidate.id]
+
+              return (
+                mapping?.cardTitle === card.title &&
+                mapping?.itemName === item.name
+              )
+            })
+
+            if (!adminItem) {
+              return item
+            }
+
+            if (!adminItem.active) {
+              return null
+            }
+
+            return {
+              ...item,
+              price: adminItem.price,
+            }
+          })
+          .filter((item): item is PriceItem => item !== null)
+
+        return {
+          ...card,
+          items,
+        }
+      })
+      .filter((card) => card.items.length > 0)
+  }, [adminPrices])
+
   return (
     <section
       id="priser"
@@ -199,6 +336,12 @@ export default function PricingSection() {
             Avbestilling må meldes senest 24 timer før avtalen. Ubenyttet
             timeavtale faktureres med 1 500 kr per klokketime eller avsatt tid.
           </p>
+
+          {adminPrices && (
+            <p className="mt-3 text-xs font-medium text-[#0073C9]">
+              Demo: Prislisten er koblet til adminpanelet i denne nettleseren.
+            </p>
+          )}
         </div>
       </div>
     </section>

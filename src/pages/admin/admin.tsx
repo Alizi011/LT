@@ -57,7 +57,7 @@ type PriceItem = {
 }
 
 const initialTreatments: Treatment[] = [
-  { id: 1, title: 'Laserbehandlinger', description: 'Skånsom laserteknologi mot snorking, tørr munn, tannkjøtt og betennelser.', active: true, featured: true },
+  { id: 1, title: 'Laserbehandlinger', description: 'Moderne Fotona-laser for blant annet NightLase, tannbleking, tannkjøtt, implantater, rotbehandling og smertelindring.', active: true, featured: true },
   { id: 2, title: 'Generell tannhelse', description: 'Undersøkelser, tannrens, fyllinger og rotbehandling.', active: true },
   { id: 3, title: 'Tannlegeskrekk', description: 'Rolig og trygg oppfølging for pasienter med behandlingsangst.', active: true },
   { id: 4, title: 'Estetisk tannbehandling', description: 'Tannbleking, porselenfasetter, kroner og broer.', active: true },
@@ -316,13 +316,13 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
                 <span className="hidden text-xs text-white/70 sm:inline">Ny nettside for Lørenskog Tannlegesenter</span>
               </div>
               <p className="mt-0.5 text-xs text-white/80">
-                59 000 kr eks. mva. · Klikk for å {offerOpen ? 'lukke' : 'åpne'} tilbudet
+                49 900 kr eks. mva. · Klikk for å {offerOpen ? 'lukke' : 'åpne'} tilbudet
               </p>
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-3">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-bold text-[#0B1120]">59 000 kr</p>
+                <p className="text-sm font-bold text-white">49 900 kr</p>
                 <p className="text-[11px] text-white/70">eks. mva.</p>
               </div>
 
@@ -490,9 +490,9 @@ function LaserPanel() {
       <div className="grid gap-5 lg:grid-cols-2">
         <div className="rounded-2xl border border-[#E7ECF2] bg-white p-6">
           <div className="flex items-center gap-3"><div className="rounded-xl bg-[#EEF6FD] p-3 text-[#0073C9]"><Sparkles size={21} /></div><div><h3 className="font-bold">Fotona laser</h3><p className="text-xs text-[#8B97A3]">Hovedseksjon på nettsiden</p></div><Switch defaultChecked className="ml-auto" /></div>
-          <div className="mt-6 space-y-4"><Field label="Overskrift" defaultValue="Moderne laserbehandling med Fotona" /><div><Label>Beskrivelse</Label><Textarea className="mt-2 border-[#E4EAF0]" rows={5} defaultValue="Skånsom og presis laserbehandling tilpasset flere områder innen tannhelse og velvære." /></div></div>
+          <div className="mt-6 space-y-4"><Field label="Overskrift" defaultValue="Presis og skånsom laserbehandling med Fotona" /><div><Label>Beskrivelse</Label><Textarea className="mt-2 border-[#E4EAF0]" rows={5} defaultValue="Fotona-laseren brukes i utvalgte behandlinger der høy presisjon, skånsom vevshåndtering og god pasientkomfort er viktig." /></div></div>
         </div>
-        <div className="rounded-2xl border border-[#E7ECF2] bg-white p-6"><h3 className="font-bold">Fremhevede behandlinger</h3><p className="mt-1 text-xs text-[#8B97A3]">Klar for senere kobling til databasen.</p><div className="mt-5 space-y-3">{['NightLase / snorking', 'Tannkjøttbehandling', 'Tørr munn', 'Munnsår / herpes'].map((name) => <div key={name} className="flex items-center justify-between rounded-xl border border-[#EDF1F4] px-4 py-3"><span className="text-sm font-medium">{name}</span><Switch defaultChecked /></div>)}</div></div>
+        <div className="rounded-2xl border border-[#E7ECF2] bg-white p-6"><h3 className="font-bold">Fremhevede behandlinger</h3><p className="mt-1 text-xs text-[#8B97A3]">Klar for senere kobling til databasen.</p><div className="mt-5 space-y-3">{['NightLase / snorking', 'TouchWhite / tannbleking', 'Tannkjøtt og peri-implantitt', 'Rotbehandling / SWEEPS', 'Tannfølsomhet', 'Munnsår / herpes', 'ComfortLase / smertelindring'].map((name) => <div key={name} className="flex items-center justify-between rounded-xl border border-[#EDF1F4] px-4 py-3"><span className="text-sm font-medium">{name}</span><Switch defaultChecked /></div>)}</div></div>
       </div>
     </AdminSection>
   )
@@ -509,13 +509,13 @@ function TeamPanel() {
 
 function OfferDetails() {
   const offerLines = [
-    ['Design og visuelt oppsett', '8 000 kr'],
-    ['Utvikling av nettside', '18 000 kr'],
-    ['Responsiv tilpasning og animasjoner', '6 000 kr'],
-    ['Behandlings-, laser- og prisinnhold', '6 000 kr'],
-    ['Adminløsning og innholdsredigering', '8 000 kr'],
-    ['Digital klinikkassistent / chatbot', '3 000 kr'],
-    ['Produksjonsoppsett, e-post og database', '10 000 kr'],
+    ['Design og visuelt oppsett', '7 500 kr'],
+    ['Frontend-utvikling i React / TypeScript', '13 500 kr'],
+    ['Responsiv tilpasning og animasjoner', '4 500 kr'],
+    ['Behandlings-, laser- og prisinnhold', '6 500 kr'],
+    ['Adminpanel og innholdsredigering', '6 000 kr'],
+    ['Behandlingsguide og digital klinikkassistent', '5 000 kr'],
+    ['Teknisk SEO, testing og publisering', '6 900 kr'],
   ]
 
   return (
@@ -526,15 +526,16 @@ function OfferDetails() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#59B9F2]">Pristilbud</p>
             <h3 className="mt-2 text-2xl font-bold sm:text-3xl">Ny nettside for Lørenskog Tannlegesenter</h3>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/60">
-              Design, utvikling og ferdig produksjonsoppsett av moderne nettside med behandlingsinnhold,
-              Fotona/laser, prisvisning, administrasjonspanel, digital klinikkassistent, e-post og database.
+              Design, utvikling og publisering av moderne nettside med behandlingsinnhold, Fotona/laser,
+              prisvisning, administrasjonspanel, interaktiv behandlingsguide, digital klinikkassistent
+              og skreddersydd visuelt innhold.
             </p>
           </div>
 
           <div className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 sm:text-right">
             <p className="text-xs text-white/50">Tilbudssum eks. mva.</p>
-            <p className="mt-1 text-3xl font-bold">59 000 kr</p>
-            <p className="mt-1 text-xs text-white/45">73 750 kr inkl. mva.</p>
+            <p className="mt-1 text-3xl font-bold">49 900 kr</p>
+            <p className="mt-1 text-xs text-white/45">62 375 kr inkl. mva.</p>
           </div>
         </div>
       </div>
@@ -561,21 +562,21 @@ function OfferDetails() {
 
           <ul className="mt-4 space-y-2.5 rounded-xl border border-[#CFE5F6] bg-white/75 p-5 text-sm text-[#53606D]">
             {[
-              'Skreddersydd nettside',
+              'Skreddersydd nettside i React / TypeScript',
               'Responsivt design for mobil og desktop',
-              'Behandlinger og prisstruktur',
-              'Fotona / laserpresentasjon',
-              'Anmeldelser og kontaktseksjon',
-              'Animasjoner og moderne brukeropplevelse',
-              'Oppsett og publisering på one.com',
-              'Domene- og DNS-konfigurasjon',
-              'Oppsett av profesjonelle e-postadresser',
-              'Databaseoppsett for nettsidens innhold',
-              'Kobling mellom adminpanelet og databasen',
-              'Kontakt- og henvendelsesoppsett mot klinikkens e-post',
+              'Behandlinger, prisstruktur og konverteringsfokuserte handlingsknapper',
+              'Utvidet Fotona / laserpresentasjon med flere behandlingsområder',
+              'Pasientvurderinger, kontaktseksjon og tydelig timebestilling',
+              'Animasjoner, scroll-effekter og moderne brukeropplevelse',
+              'Produksjonsoppsett og publisering av nettsiden',
+              'Klargjøring for domene- og DNS-konfigurasjon',
+              'Interaktiv behandlingsguide for pasienter',
               'Digital klinikkassistent for vanlige spørsmål og veiledning',
-              'Testing før lansering',
-              'Grunnleggende backup- og driftsoppsett',
+              'Adminpanel for behandlinger, priser, laser, team og klinikkinnstillinger',
+              'Skreddersydd visuelt innhold og egne illustrasjoner/bilder til sentrale seksjoner',
+              'Grunnleggende teknisk SEO og ytelsesoptimalisering',
+              'Testing på mobil og desktop før lansering',
+              'Cookie-banner og grunnleggende produksjonsoppsett',
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 leading-relaxed">
                 <span className="mt-[7px] h-2 w-2 shrink-0 rounded-full bg-[#0073C9]" />
@@ -586,16 +587,15 @@ function OfferDetails() {
 
           <div className="mt-7 space-y-3">
             <div className="rounded-xl border border-[#CFE5F6] bg-white/80 p-4 text-sm leading-relaxed text-[#315A78]">
-              Den digitale klinikkassistenten settes opp for vanlige spørsmål om behandlinger, priser,
-              åpningstider, laser, tannlegeskrekk, kontakt og timebestilling. Løsningen kan leveres med
-              styrte svar uten løpende AI-kostnad. Eventuell senere tilkobling til en ekstern AI-tjeneste
-              med forbruksbasert kostnad avtales separat.
+              Den digitale klinikkassistenten og behandlingsguiden settes opp for vanlige spørsmål om behandlinger,
+              priser, åpningstider, laser, tannlegeskrekk, kontakt og timebestilling. Eventuell senere
+              tilkobling til ekstern AI-tjeneste, journalsystem eller booking-API avtales separat.
             </div>
 
             <div className="rounded-xl border border-[#CFE5F6] bg-white/80 p-4 text-sm leading-relaxed text-[#315A78]">
-              Databaseoppsettet gjelder nettsidens innhold, priser, behandlinger og administrasjon.
-              Lagring av pasientjournaler, helseopplysninger eller annen sensitiv pasientinformasjon
-              er ikke inkludert i denne leveransen og må eventuelt avtales som et eget prosjekt.
+              Adminpanelet i denne leveransen omfatter redigering av nettsideinnhold og lokale utkast.
+              Produksjonsklar backend, sikker innlogging, database, pasientportal eller lagring av
+              helseopplysninger er ikke inkludert og må eventuelt avtales som eget prosjekt.
             </div>
           </div>
         </div>
@@ -607,18 +607,18 @@ function OfferDetails() {
             <div className="mt-5 space-y-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-[#697684]">Sum eks. mva.</span>
-                <span className="font-semibold">59 000 kr</span>
+                <span className="font-semibold">49 900 kr</span>
               </div>
 
               <div className="flex items-center justify-between text-sm">
                 <span className="text-[#697684]">Mva. 25 %</span>
-                <span className="font-semibold">14 750 kr</span>
+                <span className="font-semibold">12 475 kr</span>
               </div>
 
               <div className="border-t border-[#DDE5EC] pt-4">
                 <div className="flex items-end justify-between gap-4">
                   <span className="text-sm font-semibold">Totalt inkl. mva.</span>
-                  <span className="text-2xl font-bold text-[#0073C9]">73 750 kr</span>
+                  <span className="text-2xl font-bold text-[#0073C9]">62 375 kr</span>
                 </div>
               </div>
             </div>
@@ -627,9 +627,9 @@ function OfferDetails() {
           <div className="mt-5 rounded-2xl border border-[#E7ECF2] bg-white p-6">
             <h4 className="font-bold">Forutsetninger</h4>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-[#6F7B87]">
-              <p>Tilbudet gjelder nettsiden, administrasjonspanel, produksjonsoppsett på one.com, e-postoppsett og database for nettsidens innhold.</p>
-              <p>Større nye funksjoner, eksterne integrasjoner, avansert booking, pasientportal eller behandling av sensitive pasientdata avtales separat.</p>
-              <p>Eventuelle abonnementer og tredjepartskostnader hos one.com, domeneleverandør eller andre eksterne tjenester faktureres av leverandøren og kommer i tillegg dersom de oppstår.</p>
+              <p>Tilbudet gjelder nettsiden, administrasjonspanel, behandlingsguide, digital klinikkassistent, skreddersydd laserinnhold og produksjonsoppsett for ferdig publisering.</p>
+              <p>Større nye funksjoner, produksjonsklar backend/database, eksterne integrasjoner, avansert booking, pasientportal eller behandling av sensitive pasientdata avtales separat.</p>
+              <p>Eventuelle abonnementer og tredjepartskostnader hos domeneleverandør, webhotell, e-postleverandør eller andre eksterne tjenester faktureres av leverandøren og kommer i tillegg dersom de oppstår.</p>
             </div>
           </div>
         </div>
